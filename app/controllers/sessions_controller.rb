@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  # before_action :require_guest
+  before_action :redirect_authenticated_user
   layout false
   def create
     auth_hash = request.env['omniauth.auth']
@@ -19,5 +19,9 @@ class SessionsController < ApplicationController
   def delete
     session[:user_id] = nil
     redirect_to root_path
+  end
+
+  def redirect_authenticated_user
+    redirect_to root_path if user_signed_in?
   end
 end
