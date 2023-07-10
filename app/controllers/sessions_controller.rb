@@ -2,9 +2,8 @@ class SessionsController < ApplicationController
   def create
     auth_hash = request.env['omniauth.auth']
     uid = auth_hash.uid
-    email = auth_hash.info['nickname']
-    print(auth_hash)
-    @user = User.find_or_create_by(email: email, uid: uid)
+    nickname = auth_hash.info['nickname']
+    @user = User.find_or_create_by(nickname: nickname, uid: uid)
 
     if @user.persisted?
       session[:user_id] = @user.id
