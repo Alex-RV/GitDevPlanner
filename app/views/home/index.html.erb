@@ -1,7 +1,7 @@
 <h1>Home</h1>
-<% if @repo_data %>
+<% if @repos_data %>
   <ul>
-    <% @repo_data.each do |repo| %>
+    <% @repos_data.each do |repo| %>
       <li><%= repo['name'] %></li>
     <% end %>
   </ul>
