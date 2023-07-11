@@ -35,8 +35,24 @@ class GithubApiService
         response = http.request(request)
         return nil unless response.is_a?(Net::HTTPSuccess)
     
-        repos_data = JSON.parse(response.body)
-        repos_data
+        user_repos = JSON.parse(response.body)
+    
+        params = {
+          'affiliation' => 'collaborator,contributor',
+          'visibility' => 'all'
+        }
+    
+        uri.query = URI.encode_www_form(params)
+    
+        request = Net::HTTP::Get.new(uri, headers)
+    
+        response = http.request(request)
+        return nil unless response.is_a?(Net::HTTPSuccess)
+    
+        other_repos = JSON.parse(response.body)
+    
+        all_repos = user_repos + other_repos
+        all_repos
       end
   
     # def self.fetch_user_and_repos(username, access_token)

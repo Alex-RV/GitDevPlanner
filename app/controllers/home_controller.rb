@@ -8,5 +8,6 @@ class HomeController < ApplicationController
     # data = GithubApiService.fetch_user_and_repos(nickname, github_access_token)
     # @repos_data = data[:repos_data]
     @repos_data = GithubApiService.fetch_repos(github_access_token)
+    # print(@repos_data)
   end
 end

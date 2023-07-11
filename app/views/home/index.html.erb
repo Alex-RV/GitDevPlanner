@@ -1,10 +1,11 @@
 <h1>Home</h1>
 <% if @repos_data %>
-  <ul>
+  <ol>
     <% @repos_data.each do |repo| %>
       <li><%= repo['name'] %></li>
+      <p><%= repo['html_url'] %></p>
     <% end %>
-  </ul>
+  </ol>
 <% else %>
   <p>No repositories found.</p>
 <% end %>
