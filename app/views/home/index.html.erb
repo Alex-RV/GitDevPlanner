@@ -14,24 +14,24 @@
 
 <% if @collaborators_data %>
   <h2>Collaborators</h2>
-  <ul>
+  <ol>
     <% @collaborators_data.each do |collaborator| %>
       <li><%= collaborator['login'] %></li>
       <p><%= collaborator['html_url'] %></p>
     <% end %>
-  </ul>
+  </ol>
 <% else %>
   <p>No collaborators found.</p>
 <% end %>
 
 <% if @owners_data %>
   <h2>Owners</h2>
-  <ul>
+  <ol>
     <% @owners_data.each do |owner| %>
       <li><%= owner['login'] %></li>
       <p><%= owner['html_url'] %></p>
     <% end %>
-  </ul>
+  </ol>
 <% else %>
   <p>No owners found.</p>
 <% end %>
