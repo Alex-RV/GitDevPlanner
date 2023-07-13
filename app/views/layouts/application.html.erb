@@ -5,18 +5,25 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   </head>
-
-  <body>
+<body class="flex flex-row">
+  <%= render 'shared/sidebar' %>
+  
+  <div id="content" class="flex-col flex-1 ml-64">
     <%= link_to 'Home', root_path %>
-    <% if user_signed_in? %>
-      <%= current_user.nickname %>
-      <%= button_to 'log out', logout_path, method: :delete %>
-    <% else %>
-      <%= button_to 'sign in with Github', '/auth/github', data: { turbo: false } %>
-    <% end %>
+
     <%= yield %>
-  </body>
+  </div>
+</body>
+
+
+
+
+
+
+
+
 </html>

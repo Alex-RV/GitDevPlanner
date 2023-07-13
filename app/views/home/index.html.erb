@@ -1,11 +1,24 @@
-<h1>Home</h1>
+<h1 class="text-4xl font-bold mb-8">Home</h1>
 
 <% if @repos_data %>
-  <h2>Repositories</h2>
-  <ol>
+  <h2 class="text-2xl font-semibold mb-4">Repositories</h2>
+  <ol class="list-decimal pl-6 mb-8">
     <% @repos_data.each do |repo| %>
-      <li><%= repo['name'] %></li>
-      <p><%= repo['html_url'] %></p>
+      <li class="mb-6">
+        <h3 class="text-xl font-semibold mb-2">Repository: <%= repo['name'] %></h3>
+        <ul>
+          <li><strong>Name:</strong> <%= repo['name'] %></li>
+          <li><strong>Owner:</strong> <%= repo['owner']['login'] %></li>
+          <li><strong>URL:</strong> <%= repo['html_url'] %></li>
+          <li><strong>Private Status:</strong> <%= repo['private'] ? 'Private' : 'Public' %></li>
+          <li>
+            <strong>Last non-code related updates:</strong> <%= repo['updated_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+          </li>
+          <li>
+            <strong>Last code related updates:</strong> <%= repo['pushed_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+          </li>
+        </ul>
+      </li>
     <% end %>
   </ol>
 <% else %>
@@ -13,23 +26,76 @@
 <% end %>
 
 <% if @collaborators_data %>
-  <h2>Collaborators</h2>
-  <ol>
-    <% @collaborators_data.each do |collaborator| %>
-      <li><%= collaborator['login'] %></li>
-      <p><%= collaborator['html_url'] %></p>
-    <% end %>
-  </ol>
+  <h2 class="text-2xl font-semibold mb-4">Collaborators</h2>
+  <% @collaborators_data.each do |collaborator| %>
+    <h3 class="text-xl font-semibold mb-2">Login: <%= collaborator['login'] %></h3>
+    <div class="flex items-center mb-4">
+      <img src="<%= collaborator['avatar_url'] %>" alt="Avatar" class="w-10 h-10 rounded-full mr-2">
+      <p>HTML URL: <%= collaborator['html_url'] %></p>
+    </div>
+    <div id="subscriptions-<%= collaborator['login'] %>" class="mb-6">
+      <h4 class="text-lg font-semibold mb-2">Subscriptions:</h4>
+      <p class="hidden">Loading...</p>
+    </div>
+    <div id="organizations-<%= collaborator['login'] %>">
+      <h4 class="text-lg font-semibold mb-2">Organizations:</h4>
+      <p class="hidden">Loading...</p>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        fetchCollaboratorData("<%= collaborator['login'] %>", "<%= collaborator['subscriptions_url'] %>", "<%= collaborator['organizations_url'] %>");
+      });
+
+      function fetchCollaboratorData(login, subscriptionsUrl, organizationsUrl) {
+        fetchCollaborations(subscriptionsUrl, login, "subscriptions-" + login);
+        fetchCollaborations(organizationsUrl, login, "organizations-" + login);
+      }
+
+      function fetchCollaborations(url, login, containerId) {
+        const container = document.getElementById(containerId);
+        const placeholder = container.querySelector("p.hidden");
+        placeholder.classList.remove("hidden");
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            placeholder.remove();
+
+            if (data.length > 0) {
+              const ul = document.createElement("ul");
+              ul.classList.add("list-disc", "pl-6");
+              data.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item.name;
+                ul.appendChild(li);
+              });
+              container.appendChild(ul);
+            } else {
+              container.remove();
+            }
+          })
+          .catch(error => {
+            container.textContent = "Failed to fetch data.";
+            console.error(error);
+          });
+      }
+    </script>
+  <% end %>
 <% else %>
   <p>No collaborators found.</p>
 <% end %>
 
 <% if @owners_data %>
-  <h2>Owners</h2>
-  <ol>
+  <h2 class="text-2xl font-semibold mb-4">Owners</h2>
+  <ol class="list-decimal pl-6">
     <% @owners_data.each do |owner| %>
-      <li><%= owner['login'] %></li>
-      <p><%= owner['html_url'] %></p>
+      <li class="mb-6">
+        <h3 class="text-xl font-semibold mb-2">Owner: <%= owner['login'] %></h3>
+        <ul>
+          <li><strong>Login:</strong> <%= owner['login'] %></li>
+          <li><strong>URL:</strong> <%= owner['html_url'] %></li>
+        </ul>
+      </li>
     <% end %>
   </ol>
 <% else %>
