@@ -4,7 +4,10 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.string :nickname
       t.string :uid
       t.string :github_access_token
-      # Add any additional columns you need for the "users" table
+      t.string :avatar_url
+      t.string :name
+      t.string :email
+
       t.timestamps
     end
   end

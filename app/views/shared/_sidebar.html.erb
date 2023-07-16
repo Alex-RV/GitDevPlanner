@@ -1,24 +1,69 @@
-<aside class="flex flex-col bg-green-900 text-white py-4 px-6 h-screen fixed top-0 left-0">
-  <h3 class="text-2xl font-semibold mb-4">Sidebar Content</h3>
-  <ul class="space-y-4">
-    <li>
-      <a href="#" class="block hover:text-green-500 text-lg">Dashboard</a>
-    </li>
-    <li>
-      <a href="#" class="block hover:text-green-500 text-lg">Repositories</a>
-    </li>
-    <li>
-      <a href="#" class="block hover:text-green-500 text-lg">Collaborators</a>
-    </li>
-    <% if user_signed_in? %>
-      <li>
-        <span class="block mb-2 text-lg">Welcome <%= current_user.nickname %>!</span>
-        <%= button_to 'Log out', logout_path, method: :delete, class: "bg-red-500 hover:bg-red-600 px-4 py-2 rounded" %>
-      </li>
-    <% else %>
-      <li>
-        <%= button_to 'Sign in with GitHub', '/auth/github', data: { turbo: false }, class: "bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded" %>
-      </li>
-    <% end %>
-  </ul>
-</aside>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="flex flex-col h-screen bg-green-800 w-64 fixed top-0 left-0">
+      <div class="flex items-center justify-left h-20 pl-5 mb-6 text-white">
+        <h1 class="text-2xl font-bold">Git Dev Planner</h1>
+      </div>
+      <div class="flex-grow overflow-y-auto">
+        <div class="flex flex-col">
+          <a href="/dashboard"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-700 dark:hover:bg-gray-800 <%= current_page?(dashboard_path) ? 'text-green-500' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/explore.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(dashboard_path) ? 'text-green-500' : 'text-white' %>">Dashboard</span>
+            </div>
+          </a>
+          <a href="/repositories"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-600 dark:hover:bg-gray-800 <%= current_page?(repositories_path) ? 'text-green-500' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/explore.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(repositories_path) ? 'text-green-500' : 'text-white' %>">Repositories</span>
+            </div>
+          </a>
+          <a href="/people"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-600 dark:hover:bg-gray-800 <%= current_page?(people_path) ? 'text-green-500' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/people.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(people_path) ? 'text-green-500' : 'text-white' %>">People</span>
+            </div>
+          </a>
+          <a href="/settings"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-600 dark:hover:bg-gray-800 <%= current_page?(settings_path) ? 'text-green-500' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/settings.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(settings_path) ? 'text-green-500' : 'text-white' %>">Settings</span>
+            </div>
+          </a>
+          <div class="flex items-center space-x-2 pl-5 mt-16">
+            <img src="<%= current_user.avatar_url %>" alt="Profile Picture" width="20" height="20" class="w-8 h-8 rounded-full">
+            <div>
+              <p class="font-semibold text-white"><%= current_user.nickname %></p>
+            </div>
+          </div>
+          <% if user_signed_in? %>
+              <%= button_to 'Log out', logout_path, method: :delete, class: "bg-red-500 hover:bg-red-600 px-4 py-2 rounded" %>
+          <% else %>
+            <li>
+              <%= button_to 'Sign in with GitHub', '/auth/github', data: { turbo: false }, class: "bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded" %>
+            </li>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -19,6 +19,9 @@ ActiveRecord::Schema.define(version: 2023_07_10_043311) do
     t.string "nickname"
     t.string "uid"
     t.string "github_access_token"
+    t.string "avatar_url"
+    t.string "name"
+    t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
