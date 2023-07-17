@@ -5,7 +5,7 @@ class HomeController < ApplicationController
     nickname = session[:nickname]
     github_access_token = session[:github_access_token]
 
-    repos_future = Concurrent::Promise.execute { GithubApiService.fetch_repos(github_access_token) }
+    repos_future = Concurrent::Promise.execute { GithubApiService.fetch_repos(github_access_token, nickname) }
     collaborators_future = Concurrent::Promise.execute { GithubApiService.fetch_collaborators(github_access_token, nickname) }
 
     data = Concurrent::Promise.zip(repos_future, collaborators_future).value

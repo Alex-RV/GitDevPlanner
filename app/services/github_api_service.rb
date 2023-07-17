@@ -35,6 +35,14 @@ class GithubApiService
 
     all_repos = (user_repos + other_repos).uniq { |repo| repo['id'] }
 
+    # Fetch last commit for each repo in parallel
+    promises = all_repos.map do |repo|
+      Concurrent::Promise.execute { fetch_last_commit(repo, access_token, nickname) }
+    end
+
+    # Wait for all promises to complete
+    Concurrent::Promise.zip(*promises).wait
+
     # Owners of the repos
     owners = Set.new
 
@@ -42,12 +50,6 @@ class GithubApiService
       owner_data = repo['owner']
 
       owners.add(owner_data)
-    end
-
-    all_repos.each do |repo|
-      last_commit = fetch_last_commit(repo['commits_url'].gsub('{/sha}', ''), access_token, nickname)
-      print("last commit",last_commit)
-      repo['last_commit'] = last_commit if last_commit
     end
 
     { all_repos: all_repos, owners: owners.to_a }
@@ -74,12 +76,10 @@ class GithubApiService
     collaborators = Concurrent::Set.new
 
     # Use parallel processing to fetch collaborators concurrently
-    promises = []
-
-    repos_data.each do |repo|
+    promises = repos_data.map do |repo|
       collaborators_url = repo['collaborators_url'].gsub('{/collaborator}', '')
 
-      promises << Concurrent::Promise.execute { fetch_users(collaborators_url, access_token, nickname, exclude_self: true) }
+      Concurrent::Promise.execute { fetch_users(collaborators_url, access_token, nickname, exclude_self: true) }
     end
 
     # Wait for all promises to complete and collect the results
@@ -116,29 +116,30 @@ class GithubApiService
     users_data
   end
 
-  def self.fetch_last_commit(commits_url, access_token, nickname)
+  def self.fetch_last_commit(repo, access_token, nickname)
+    commits_url = repo['commits_url'].gsub('{/sha}', '') + "?author=#{nickname}"
+  
     headers = {
       'Accept' => 'application/vnd.github+json',
       'Authorization' => "Bearer #{access_token}",
       'User-Agent' => 'GitDevPlanner'
     }
-
+  
     uri = URI(commits_url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
-
-    request = Net::HTTP::Get.new(uri.path, headers)
-
+  
+    request = Net::HTTP::Get.new(uri.path + '?' + uri.query, headers)
+  
     response = http.request(request)
-    return nil unless response.is_a?(Net::HTTPSuccess)
-
+    return unless response.is_a?(Net::HTTPSuccess)
+  
     commits_data = JSON.parse(response.body)
-
-    last_commit = commits_data.find { |commit| commit['author']['login'] == nickname }
-
-    return nil unless last_commit
-
-    {
+    last_commit = commits_data.first
+  
+    return unless last_commit
+  
+    repo['last_commit'] = {
       'sha' => last_commit['sha'],
       'message' => last_commit['commit']['message'],
       'author' => last_commit['commit']['author']['name'],
