@@ -76,10 +76,12 @@ class GithubApiService
     collaborators = Concurrent::Set.new
 
     # Use parallel processing to fetch collaborators concurrently
-    promises = repos_data.map do |repo|
+    promises = []
+
+    repos_data.each do |repo|
       collaborators_url = repo['collaborators_url'].gsub('{/collaborator}', '')
 
-      Concurrent::Promise.execute { fetch_users(collaborators_url, access_token, nickname, exclude_self: true) }
+      promises << Concurrent::Promise.execute { fetch_users(collaborators_url, access_token, nickname, exclude_self: true) }
     end
 
     # Wait for all promises to complete and collect the results
@@ -87,9 +89,7 @@ class GithubApiService
       promise.value.each { |user| collaborators.add(user) }
     end
 
-    collaborators.to_a.uniq { |user| user['login'] }.map do |user|
-      { 'login' => user['login'], 'subscriptions_url' => user['subscriptions_url'], 'organizations_url' => user['organizations_url'] }
-    end
+    collaborators.to_a.uniq { |user| user['login'] }
   end
 
   def self.fetch_users(url, access_token, nickname, exclude_self: false)
