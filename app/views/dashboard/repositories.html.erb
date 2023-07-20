@@ -1,26 +1,65 @@
-<div>
-  <% if @repos_data %>
-  <h2 class="text-2xl font-semibold mb-4">Repositories</h2>
-  <ol class="list-decimal pl-6 mb-8">
-    <% @repos_data.each do |repo| %>
-      <li class="mb-6">
-        <h3 class="text-xl font-semibold mb-2">Repository: <%= repo['last_commit'] %></h3>
-        <ul>
-          <li><strong>Name:</strong> <%= repo['name'] %></li>
-          <li><strong>Owner:</strong> <%= repo['owner']['login'] %></li>
-          <li><strong>URL:</strong> <%= repo['html_url'] %></li>
-          <li><strong>Private Status:</strong> <%= repo['private'] ? 'Private' : 'Public' %></li>
-          <li>
-            <strong>Last non-code related updates:</strong> <%= repo['updated_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
-          </li>
-          <li>
-            <strong>Last code related updates:</strong> <%= repo['pushed_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
-          </li>
-        </ul>
-      </li>
-    <% end %>
-  </ol>
-<% else %>
-  <p>No repositories found.</p>
-<% end %>
+<div class="container mx-auto py-8">
+  <% if @repos_data.any? %>
+    <h2 class="text-2xl font-semibold mb-4">Repositories</h2>
+    <ol class="list-decimal pl-6 mb-8">
+      <% @repos_data.each do |repo| %>
+        <li class="mb-6">
+          <h3 class="text-xl font-semibold mb-2">Repository: <%= repo['name'] %></h3>
+          <ul>
+            <li><strong>Name:</strong> <%= repo['name'] %></li>
+            <li><strong>Owner:</strong> <%= repo['owner']['login'] %></li>
+            <li><strong>URL:</strong> <%= repo['html_url'] %></li>
+            <li><strong>Private Status:</strong> <%= repo['private'] ? 'Private' : 'Public' %></li>
+            <li>
+              <strong>Last non-code related updates:</strong> <%= repo['updated_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+            </li>
+            <li>
+              <strong>Last code related updates:</strong> <%= repo['pushed_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+            </li>
+          </ul>
+
+          <% repo_tasks = @tasks.select { |task| task.repository_id == repo['id'] } %>
+          <% if repo_tasks.any? %>
+            <h4 class="text-lg font-semibold mb-2 mt-4">Tasks:</h4>
+            <ul class="list-disc pl-6">
+              <% repo_tasks.each do |task| %>
+                <li>
+                  <strong>Title:</strong> <%= task.title %>
+                  <br>
+                  <strong>Description:</strong> <%= task.description %>
+                  <br>
+                  <strong>Scheduled At:</strong> <%= task.scheduled_at %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="mt-4">No tasks associated with this repository.</p>
+          <% end %>
+
+          <%= form_with(model: Task.new, url: create_task_path, method: :post, class: 'mt-4') do |form| %>
+            <%= form.hidden_field :repository_id, value: repo['id'] %>
+
+            <div class="mb-4">
+              <%= form.label :title, class: 'block font-semibold' %>
+              <%= form.text_field :title, class: 'form-input mt-1 w-full' %>
+            </div>
+
+            <div class="mb-4">
+              <%= form.label :description, class: 'block font-semibold' %>
+              <%= form.text_area :description, class: 'form-textarea mt-1 w-full' %>
+            </div>
+
+            <div class="mb-4">
+              <%= form.label :scheduled_at, class: 'block font-semibold' %>
+              <%= form.datetime_select :scheduled_at, class: 'form-input mt-1 w-full' %>
+            </div>
+
+            <%= form.submit 'Create Task', class: 'btn-primary' %>
+          <% end %>
+        </li>
+      <% end %>
+    </ol>
+  <% else %>
+    <p>No repositories found.</p>
+  <% end %>
 </div>

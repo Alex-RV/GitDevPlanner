@@ -21,15 +21,9 @@ class DashboardController < ApplicationController
         Time.at(0)
       end
     end.reverse
-    # repos_data = @repos_data.reject { |repo| repo['last_commit'].nil? }
 
-    # repos_data.each do |repo|
-    #   if repo['last_commit']
-    #     puts repo['last_commit']['date']
-    #   else
-    #     puts "No last commit date available"
-    #   end
-    # end
+    @tasks = Task.where(user_id: current_user.id)
+
     
 
   end
@@ -46,4 +40,23 @@ class DashboardController < ApplicationController
     @owners_data = data[0][:owners]
     @collaborators_data = data[1]
   end
+
+def create_task
+    @task = Task.new(task_params)
+    @task.user_id = current_user.id
+
+    if @task.save
+      redirect_to root_path, notice: 'Task created successfully.'
+    else
+      redirect_to root_path, alert: 'Failed to create task.'
+    end
+  end
+
+  private
+
+  def task_params
+    params.require(:task).permit(:title, :description, :scheduled_at, :repository_id)
+  end
+
+  
 end

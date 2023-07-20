@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  owner_login: MyString
+  html_url: MyString
+  private: false
+  updated_at: 2023-07-19 21:34:07
+  pushed_at: 2023-07-19 21:34:07
+
+two:
+  name: MyString
+  owner_login: MyString
+  html_url: MyString
+  private: false
+  updated_at: 2023-07-19 21:34:07
+  pushed_at: 2023-07-19 21:34:07

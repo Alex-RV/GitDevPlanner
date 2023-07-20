@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   get 'auth/github/callback', to: 'sessions#create'
   get '/login', to: 'sessions#login'
   delete '/logout', to: 'sessions#delete'
+  post 'create_task', to: 'dashboard#create_task', as: 'create_task'
+
 end
