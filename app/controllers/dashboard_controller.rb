@@ -12,7 +12,6 @@ class DashboardController < ApplicationController
     repos_future = Concurrent::Promise.execute { GithubApiService.fetch_repos(github_access_token, nickname) }
 
     data = Concurrent::Promise.zip(repos_future).value
-    # @repos_data = data[0][:all_repos]
     repos_data = data[0][:all_repos]
     @repos_data = repos_data.sort_by do |repo|
       if repo['last_commit']
@@ -21,11 +20,9 @@ class DashboardController < ApplicationController
         Time.at(0)
       end
     end.reverse
+    print("Tasks:",Task)
 
     @tasks = Task.where(user_id: current_user.id)
-
-    
-
   end
 
   def people
@@ -41,7 +38,7 @@ class DashboardController < ApplicationController
     @collaborators_data = data[1]
   end
 
-def create_task
+  def create_task
     @task = Task.new(task_params)
     @task.user_id = current_user.id
 
