@@ -20,9 +20,10 @@ class DashboardController < ApplicationController
         Time.at(0)
       end
     end.reverse
-    print("Tasks:",Task)
+    print("Tasks:",Task.where(user_id: current_user.id).to_a)
 
-    @tasks = Task.where(user_id: current_user.id)
+    @tasks = Task.where(user_id: current_user.id).to_a
+
   end
 
   def people
@@ -39,21 +40,32 @@ class DashboardController < ApplicationController
   end
 
   def create_task
-    @task = Task.new(task_params)
-    @task.user_id = current_user.id
-
-    if @task.save
+    repository = Repository.find(params[:task][:repository]) # Convert repository_id to a Repository object
+    task = repository.tasks.new(task_params)
+    print("!task_params!:::",task_params)
+    task.user_id = current_user.id
+    print("!current_user.id!",current_user.id)
+    
+    task.repository = task_params[:repository].to_i 
+    # print("!@task!:::",@task.save)
+    # task = Task.new(title: "My Task", description: "Task description", repository: 6345345, user: current_user)
+    # task.save
+  
+    if task.save
       redirect_to root_path, notice: 'Task created successfully.'
     else
-      redirect_to root_path, alert: 'Failed to create task.'
+      puts "Errors: #{task.errors.full_messages}"
+      redirect_to settings_path, alert: 'Failed to create task.'
     end
   end
+   
 
   private
 
   def task_params
-    params.require(:task).permit(:title, :description, :scheduled_at, :repository_id)
+    params.require(:task).permit(:title, :description, :repository)
   end
+  
 
   
 end

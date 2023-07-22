@@ -5,7 +5,7 @@ class CreateTasks < ActiveRecord::Migration[6.1]
       t.text :description
       t.boolean :done, default: false
       t.references :repository, null: false, foreign_key: true
-      t.references :user, null: false, foreign_key: true  # Add the user_id column
+      t.references :user, null: false, foreign_key: true 
 
       t.timestamps
     end

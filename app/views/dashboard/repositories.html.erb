@@ -27,8 +27,6 @@
                   <strong>Title:</strong> <%= task.title %>
                   <br>
                   <strong>Description:</strong> <%= task.description %>
-                  <br>
-                  <strong>Scheduled At:</strong> <%= task.scheduled_at %>
                 </li>
               <% end %>
             </ul>
@@ -37,7 +35,7 @@
           <% end %>
 
           <%= form_with(model: Task.new, url: create_task_path, method: :post, class: 'mt-4') do |form| %>
-          <%= form.hidden_field :repository_id, value: repo['id'] %>
+          <%= form.hidden_field :repository, value: repo['id'] %>
 
           <div class="mb-4">
             <%= form.label :title, class: 'block font-semibold' %>
@@ -47,16 +45,6 @@
           <div class="mb-4">
             <%= form.label :description, class: 'block font-semibold' %>
             <%= form.text_area :description, class: 'form-textarea mt-1 w-full' %>
-          </div>
-
-          <div class="mb-4">
-            <%= form.label :scheduled_date, class: 'block font-semibold' %>
-            <%= form.date_select :scheduled_date, class: 'form-input mt-1 w-full' %>
-          </div>
-
-          <div class="mb-4">
-            <%= form.label :scheduled_time, class: 'block font-semibold' %>
-            <%= form.time_select :scheduled_time, class: 'form-input mt-1 w-full' %>
           </div>
           <%= form.submit 'Create Task', class: 'btn-primary' %>
         <% end %>
