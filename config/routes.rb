@@ -8,5 +8,6 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#login'
   delete '/logout', to: 'sessions#delete'
   post 'create_task', to: 'dashboard#create_task', as: 'create_task'
+  get 'data/fetch_data', to: 'data#fetch_data'
 
 end
