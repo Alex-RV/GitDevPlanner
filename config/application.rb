@@ -16,6 +16,7 @@ module Gitdevplanner
         end
       end
     end
+    config.active_job.queue_adapter = :async
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 

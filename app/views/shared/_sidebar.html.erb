@@ -66,4 +66,27 @@
       </div>
     </div>
   </body>
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  function fetchData() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', '/data/fetch_data', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          const responseData = JSON.parse(xhr.responseText);
+          console.log(responseData); // Process the response data
+        } else {
+          console.error('Error fetching data:', xhr.statusText);
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  // Trigger the long polling when the page loads
+  fetchData();
+});
+
+  </script>
 </html>
