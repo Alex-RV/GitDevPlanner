@@ -15,23 +15,11 @@ class DashboardController < ApplicationController
         Time.at(0)
       end
     end.reverse
-    # nickname = session[:nickname]
-    # github_access_token = session[:github_access_token]
+    nickname = session[:nickname]
+    github_access_token = session[:github_access_token]
+    GithubReposJob.perform_later(github_access_token, nickname)
 
-    # repos_future = Concurrent::Promise.execute { GithubApiService.fetch_repos(github_access_token, nickname) }
-
-    # data = Concurrent::Promise.zip(repos_future).value
-    # repos_data = data[0][:all_repos]
-    # @repos_data = repos_data.sort_by do |repo|
-    #   if repo['last_commit']
-    #     repo['last_commit']['date'] || Time.at(0)
-    #   else
-    #     Time.at(0)
-    #   end
-    # end.reverse
-    # print("Tasks:",Task.where(user_id: current_user.id).to_a)
-
-    @tasks = Task.where(user_id: current_user.id).to_a
+    @tasks = @user.tasks
 
   end
 
@@ -50,28 +38,38 @@ class DashboardController < ApplicationController
 
   def create_task
     task = Task.new(task_params)
-    print("!task_params!:::",task_params)
-    task.user_id = current_user.id
-    print("!current_user.id!",current_user.id)
-    
-    task.repository = task_params[:repository_id].to_i 
-    # print("!@task!:::",@task.save)
-    # task = Task.new(title: "My Task", description: "Task description", repository: 6345345, user: current_user)
-    # task.save
-  
+
+    user = current_user
+
+    task.user = user
+
     if task.save
-      redirect_to root_path, notice: 'Task created successfully.'
+      redirect_to dashboard_path, notice: 'Task created successfully.'
     else
-      puts "Errors: #{task.errors.full_messages}"
-      redirect_to settings_path, alert: 'Failed to create task.'
+      @repos_data = user.repositories
+      @tasks = user.tasks
+      flash.now[:alert] = 'Failed to create task.'
+      render :repositories
     end
   end
-   
+
+  def delete_task
+    # Find the task by ID
+    task = Task.find_by(id: params[:id])
+
+    # If the task is found and belongs to the current user, delete it
+    if task && task.user == current_user
+      task.destroy
+      redirect_to repositories_path, notice: 'Task deleted successfully.'
+    else
+      redirect_to repositories_path, alert: 'Failed to delete task.'
+    end
+  end
 
   private
 
   def task_params
-    params.require(:task).permit(:title, :description, :repository_id)
+    params.require(:task).permit(:repository_id, :title, :description)
   end
   
 

@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#delete'
   post 'create_task', to: 'dashboard#create_task', as: 'create_task'
   get 'data/fetch_data', to: 'data#fetch_data'
+  delete 'delete_task/:id', to: 'dashboard#delete_task', as: 'delete_task'
 
 end

@@ -1,4 +1,4 @@
-class GithubDataJob < ApplicationJob
+class GithubReposJob < ApplicationJob
   queue_as :default
 
   def perform(github_access_token, nickname)
