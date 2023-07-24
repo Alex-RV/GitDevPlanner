@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_20_043555) do
+ActiveRecord::Schema.define(version: 2023_07_24_014332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,21 @@ ActiveRecord::Schema.define(version: 2023_07_20_043555) do
     t.string "html_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "notes", force: :cascade do |t|
@@ -40,20 +55,28 @@ ActiveRecord::Schema.define(version: 2023_07_20_043555) do
   end
 
   create_table "repositories", force: :cascade do |t|
+    t.string "repository_id"
     t.string "name"
     t.string "owner_login"
     t.string "html_url"
-    t.boolean "private"
+    t.string "private"
+    t.datetime "updated_repo_at"
     t.datetime "pushed_at"
+    t.datetime "last_commit_date"
+    t.string "last_commit_sha"
+    t.text "last_commit_message"
+    t.text "last_commit_author"
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_repositories_on_user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.boolean "done", default: false
-    t.bigint "repository_id", null: false
+    t.bigint "repository_id"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -72,6 +95,7 @@ ActiveRecord::Schema.define(version: 2023_07_20_043555) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "repositories", "users"
   add_foreign_key "tasks", "repositories"
   add_foreign_key "tasks", "users"
 end

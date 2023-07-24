@@ -4,14 +4,22 @@ one:
   name: MyString
   owner_login: MyString
   html_url: MyString
-  private: false
-  updated_at: 2023-07-19 21:34:07
-  pushed_at: 2023-07-19 21:34:07
+  private: MyString
+  updated_at: MyString
+  pushed_at: MyString
+  last_commit_date: MyString
+  last_commit_sha: MyString
+  last_commit_message: MyString
+  last_commit_author: MyString
 
 two:
   name: MyString
   owner_login: MyString
   html_url: MyString
-  private: false
-  updated_at: 2023-07-19 21:34:07
-  pushed_at: 2023-07-19 21:34:07
+  private: MyString
+  updated_at: MyString
+  pushed_at: MyString
+  last_commit_date: MyString
+  last_commit_sha: MyString
+  last_commit_message: MyString
+  last_commit_author: MyString

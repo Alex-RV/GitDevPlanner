@@ -4,7 +4,7 @@ class CreateTasks < ActiveRecord::Migration[6.1]
       t.string :title
       t.text :description
       t.boolean :done, default: false
-      t.references :repository, null: false, foreign_key: true
+      t.references :repository, foreign_key: true # Add foreign key reference to repositories table
       t.references :user, null: false, foreign_key: true 
 
       t.timestamps

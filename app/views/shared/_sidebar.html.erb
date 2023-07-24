@@ -53,6 +53,8 @@
             <img src="<%= current_user.avatar_url %>" alt="Profile Picture" width="20" height="20" class="w-8 h-8 rounded-full">
             <div>
               <p class="font-semibold text-white"><%= current_user.nickname %></p>
+              <p class="font-semibold text-white"><%= current_user.email %></p>
+              <p class="font-semibold text-white"><%= current_user.id %></p>
             </div>
           </div>
           <% if user_signed_in? %>
@@ -66,7 +68,7 @@
       </div>
     </div>
   </body>
-  <script>
+  <%# <script>
 document.addEventListener('DOMContentLoaded', function () {
   function fetchData() {
     const xhr = new XMLHttpRequest();
@@ -88,5 +90,5 @@ document.addEventListener('DOMContentLoaded', function () {
   fetchData();
 });
 
-  </script>
+  </script> %>
 </html>

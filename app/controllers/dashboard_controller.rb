@@ -6,21 +6,30 @@ class DashboardController < ApplicationController
   end
 
   def repositories
-    nickname = session[:nickname]
-    github_access_token = session[:github_access_token]
-
-    repos_future = Concurrent::Promise.execute { GithubApiService.fetch_repos(github_access_token, nickname) }
-
-    data = Concurrent::Promise.zip(repos_future).value
-    repos_data = data[0][:all_repos]
+    @user = current_user
+    repos_data = @user.repositories
     @repos_data = repos_data.sort_by do |repo|
-      if repo['last_commit']
-        repo['last_commit']['date'] || Time.at(0)
+      if repo.last_commit_date
+        repo.last_commit_date || Time.at(0)
       else
         Time.at(0)
       end
     end.reverse
-    print("Tasks:",Task.where(user_id: current_user.id).to_a)
+    # nickname = session[:nickname]
+    # github_access_token = session[:github_access_token]
+
+    # repos_future = Concurrent::Promise.execute { GithubApiService.fetch_repos(github_access_token, nickname) }
+
+    # data = Concurrent::Promise.zip(repos_future).value
+    # repos_data = data[0][:all_repos]
+    # @repos_data = repos_data.sort_by do |repo|
+    #   if repo['last_commit']
+    #     repo['last_commit']['date'] || Time.at(0)
+    #   else
+    #     Time.at(0)
+    #   end
+    # end.reverse
+    # print("Tasks:",Task.where(user_id: current_user.id).to_a)
 
     @tasks = Task.where(user_id: current_user.id).to_a
 
@@ -40,13 +49,12 @@ class DashboardController < ApplicationController
   end
 
   def create_task
-    repository = Repository.find(params[:task][:repository]) # Convert repository_id to a Repository object
-    task = repository.tasks.new(task_params)
+    task = Task.new(task_params)
     print("!task_params!:::",task_params)
     task.user_id = current_user.id
     print("!current_user.id!",current_user.id)
     
-    task.repository = task_params[:repository].to_i 
+    task.repository = task_params[:repository_id].to_i 
     # print("!@task!:::",@task.save)
     # task = Task.new(title: "My Task", description: "Task description", repository: 6345345, user: current_user)
     # task.save
@@ -63,7 +71,7 @@ class DashboardController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:title, :description, :repository)
+    params.require(:task).permit(:title, :description, :repository_id)
   end
   
 

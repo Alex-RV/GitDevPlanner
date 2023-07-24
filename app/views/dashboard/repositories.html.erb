@@ -4,18 +4,30 @@
     <ol class="list-decimal pl-6 mb-8">
       <% @repos_data.each do |repo| %>
         <li class="mb-6">
-          <h3 class="text-xl font-semibold mb-2">Repository: <%= repo['name'] %></h3>
+          <h3 class="text-xl font-semibold mb-2">Repository: <%= repo.name %></h3>
           <ul>
-            <li><strong>Name:</strong> <%= repo['name'] %></li>
-            <li><strong>Owner:</strong> <%= repo['owner']['login'] %></li>
-            <li><strong>URL:</strong> <%= repo['html_url'] %></li>
-            <li><strong>Private Status:</strong> <%= repo['private'] ? 'Private' : 'Public' %></li>
+            <li><strong>Name:</strong> <%= repo.name %></li>
+            <li><strong>Owner:</strong> <%= repo.owner_login %></li>
+            <li><strong>URL:</strong> <%= repo.html_url %></li>
+            <li><strong>Private Status:</strong> <%= repo.private ? 'Private' : 'Public' %></li>
             <li>
-              <strong>Last non-code related updates:</strong> <%= repo['updated_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+              <strong>Last non-code related updates:</strong>
+              <%= repo.updated_repo_at.in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
             </li>
             <li>
-              <strong>Last code related updates:</strong> <%= repo['pushed_at'].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+              <strong>Last code related updates:</strong>
+              <%= repo.pushed_at.in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
             </li>
+            <% if repo.last_commit_message %>
+              <li>
+                <strong>Last commit:</strong>
+                <%= repo.last_commit_date.in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+              </li>
+              <li><strong>Commit Message:</strong> <%= repo.last_commit_message %></li>
+              <li><strong>Commit Author:</strong> <%= repo.last_commit_author %></li>
+            <% else %>
+              <li><strong>No commits found for this repository.</strong></li>
+            <% end %>
           </ul>
 
           <% repo_tasks = @tasks.select { |task| task.repository_id == repo['id'] } %>
@@ -35,7 +47,7 @@
           <% end %>
 
           <%= form_with(model: Task.new, url: create_task_path, method: :post, class: 'mt-4') do |form| %>
-          <%= form.hidden_field :repository, value: repo['id'] %>
+          <%= form.hidden_field :repository_id, value: repo['id'] %>
 
           <div class="mb-4">
             <%= form.label :title, class: 'block font-semibold' %>

@@ -12,5 +12,6 @@ class HomeController < ApplicationController
     @repos_data = data[0][:all_repos]
     @owners_data = data[0][:owners]
     @collaborators_data = data[1]
+    GithubDataJob.perform_later(github_access_token, nickname)
   end
 end
