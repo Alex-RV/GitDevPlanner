@@ -11,16 +11,16 @@
             <li><strong>Private Status:</strong> <%= repo.private ? 'Private' : 'Public' %></li>
             <li>
               <strong>Last non-code related updates:</strong>
-              <%= repo.updated_repo_at.in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+              <%= repo.updated_repo_at.strftime('%B %e, %Y %l:%M%P') %>
             </li>
             <li>
               <strong>Last code related updates:</strong>
-              <%= repo.pushed_at.in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+              <%= repo.pushed_at.strftime('%B %e, %Y %l:%M%P') %>
             </li>
             <% if repo.last_commit_message %>
               <li>
                 <strong>Last commit:</strong>
-                <%= repo.last_commit_date.in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P') %>
+                <%= repo.last_commit_date.strftime('%B %e, %Y %l:%M%P')%>
               </li>
               <li><strong>Commit Message:</strong> <%= repo.last_commit_message %></li>
               <li><strong>Commit Author:</strong> <%= repo.last_commit_author %></li>
