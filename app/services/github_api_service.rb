@@ -89,7 +89,47 @@ class GithubApiService
       promise.value.each { |user| collaborators.add(user) }
     end
 
+    # Fetch subscriptions and organizations data for each collaborator asynchronously
+    promises = []
+
+    collaborators.each do |collaborator|
+      subscriptions_url = collaborator['subscriptions_url'].gsub('{/other_user}', '')
+      organizations_url = collaborator['organizations_url']
+
+      # Fetch subscriptions and organizations concurrently
+      promises << Concurrent::Promise.execute do
+        subscriptions = fetch_data(subscriptions_url, access_token)
+        organizations = fetch_data(organizations_url, access_token)
+
+        collaborator['subscriptions'] = subscriptions
+        collaborator['organizations'] = organizations
+      end
+    end
+
+    # Wait for all promises to complete
+    promises.each(&:wait)
+
     collaborators.to_a.uniq { |user| user['login'] }
+  end
+
+  def self.fetch_data(url, access_token)
+    headers = {
+      'Accept' => 'application/vnd.github+json',
+      'Authorization' => "Bearer #{access_token}",
+      'User-Agent' => 'GitDevPlanner'
+    }
+
+    uri = URI(url)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Get.new(uri.path, headers)
+
+    response = http.request(request)
+    return [] unless response.is_a?(Net::HTTPSuccess)
+
+    data = JSON.parse(response.body)
+    data
   end
 
   def self.fetch_users(url, access_token, nickname, exclude_self: false)
@@ -146,4 +186,6 @@ class GithubApiService
       'date' => last_commit['commit']['author']['date']
     }
   end
+
+
 end
