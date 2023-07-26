@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  owner_id: 1
   login: MyString
   html_url: MyString
 
 two:
+  owner_id: 1
   login: MyString
   html_url: MyString

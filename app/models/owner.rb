@@ -1,4 +1,3 @@
 class Owner < ApplicationRecord
-    has_many :notes, as: :noteable
-  end
-  
+    belongs_to :user
+end

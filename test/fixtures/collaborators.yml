@@ -1,11 +1,17 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  collaborator_id: 1
   login: MyString
   avatar_url: MyString
   html_url: MyString
+  subscriptions: MyText
+  organizations: MyText
 
 two:
+  collaborator_id: 1
   login: MyString
   avatar_url: MyString
   html_url: MyString
+  subscriptions: MyText
+  organizations: MyText

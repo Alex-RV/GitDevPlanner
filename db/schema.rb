@@ -10,17 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_24_014332) do
+ActiveRecord::Schema.define(version: 2023_07_26_014814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "collaborators", force: :cascade do |t|
+    t.integer "collaborator_id"
     t.string "login"
     t.string "avatar_url"
     t.string "html_url"
+    t.text "subscriptions", default: [], array: true
+    t.text "organizations", default: [], array: true
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_collaborators_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -48,10 +53,13 @@ ActiveRecord::Schema.define(version: 2023_07_24_014332) do
   end
 
   create_table "owners", force: :cascade do |t|
+    t.integer "owner_id"
     t.string "login"
     t.string "html_url"
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_owners_on_user_id"
   end
 
   create_table "repositories", force: :cascade do |t|
@@ -95,6 +103,8 @@ ActiveRecord::Schema.define(version: 2023_07_24_014332) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "collaborators", "users"
+  add_foreign_key "owners", "users"
   add_foreign_key "repositories", "users"
   add_foreign_key "tasks", "repositories"
   add_foreign_key "tasks", "users"
