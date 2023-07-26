@@ -1,26 +1,26 @@
 <div class="p-6 bg-white shadow-md rounded-lg">
-  <% if @collaborators_data %>
+  <% if @collaborators_data.any? %>
     <h2 class="text-2xl font-semibold mb-4">Collaborators</h2>
     <% @collaborators_data.each do |collaborator| %>
       <div class="mb-8 border-b-2 pb-4">
-        <h3 class="text-xl font-semibold mb-2">Login: <%= collaborator['login'] %></h3>
+        <h3 class="text-xl font-semibold mb-2">Login: <%= collaborator.login %></h3>
         <div class="flex items-center mb-4">
-          <img src="<%= collaborator['avatar_url'] %>" alt="Avatar" class="w-10 h-10 rounded-full mr-2">
-          <p class="text-sm">HTML URL: <a href="<%= collaborator['html_url'] %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= collaborator['html_url'] %></a></p>
+          <img src="<%= collaborator.avatar_url %>" alt="Avatar" class="w-10 h-10 rounded-full mr-2">
+          <p class="text-sm">HTML URL: <a href="<%= collaborator.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= collaborator.html_url %></a></p>
         </div>
-        <div id="subscriptions-<%= collaborator['login'] %>" class="mb-6">
+        <div id="subscriptions-<%= collaborator.login %>" class="mb-6">
           <h4 class="text-lg font-semibold mb-2">Subscriptions:</h4>
           <ul>
-            <% collaborator['subscriptions'].each do |subscription| %>
-              <li><%= subscription['name'] %></li>
+            <% collaborator.subscriptions.each do |subscription| %>
+              <li><%= subscription %></li>
             <% end %>
           </ul>
         </div>
-        <div id="organizations-<%= collaborator['login'] %>">
+        <div id="organizations-<%= collaborator.login %>">
           <h4 class="text-lg font-semibold mb-2">Organizations:</h4>
           <ul>
-            <% collaborator['organizations'].each do |organization| %>
-              <li><%= organization['login'] %></li>
+            <% collaborator.organizations.each do |organization| %>
+              <li><%= organization %></li>
             <% end %>
           </ul>
         </div>
@@ -30,15 +30,15 @@
     <p>No collaborators found.</p>
   <% end %>
 
-  <% if @owners_data %>
+  <% if @owners_data.any? %>
     <h2 class="text-2xl font-semibold mt-8 mb-4">Owners</h2>
     <ol class="list-decimal pl-6">
       <% @owners_data.each do |owner| %>
         <li class="mb-6 border-b-2 pb-4">
-          <h3 class="text-xl font-semibold mb-2">Owner: <%= owner['login'] %></h3>
+          <h3 class="text-xl font-semibold mb-2">Owner: <%= owner.login %></h3>
           <ul>
-            <li><strong>Login:</strong> <%= owner['login'] %></li>
-            <li><strong>URL:</strong> <a href="<%= owner['html_url'] %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= owner['html_url'] %></a></li>
+            <li><strong>Login:</strong> <%= owner.login %></li>
+            <li><strong>URL:</strong> <a href="<%= owner.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= owner.html_url %></a></li>
           </ul>
         </li>
       <% end %>
