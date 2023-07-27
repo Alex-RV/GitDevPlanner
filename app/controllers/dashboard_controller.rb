@@ -28,9 +28,23 @@ class DashboardController < ApplicationController
     @collaborators_data = @user.collaborators
     @owners_data = @user.owners
 
+    @collaborators_notes = retrieve_notes_for_users(@collaborators_data)
+    @owners_notes = retrieve_notes_for_users(@owners_data)
+
     nickname = session[:nickname]
     github_access_token = session[:github_access_token]
     GithubPeopleJob.perform_later(github_access_token, nickname)
+  end
+
+  def create_note
+    @note = Note.new(note_params)
+    @note.user = current_user
+
+    if @note.save
+      redirect_back(fallback_location: dashboard_path, notice: 'Note created successfully.')
+    else
+      redirect_back(fallback_location: dashboard_path, alert: 'Failed to create note.')
+    end
   end
 
   def create_task
@@ -41,7 +55,7 @@ class DashboardController < ApplicationController
     task.user = user
 
     if task.save
-      redirect_to dashboard_path, notice: 'Task created successfully.'
+      redirect_to repositories_path, notice: 'Task created successfully.'
     else
       @repos_data = user.repositories
       @tasks = user.tasks
@@ -63,9 +77,29 @@ class DashboardController < ApplicationController
     end
   end
 
+  def delete_note
+    note = Note.find_by(id: params[:id])
+
+    if note && note.user == current_user
+      note.destroy
+      redirect_back(fallback_location: dashboard_path, notice: 'Note deleted successfully.')
+    else
+      redirect_back(fallback_location: dashboard_path, alert: 'Failed to delete note.')
+    end
+  end
+
   private
 
   def task_params
     params.require(:task).permit(:repository_id, :title, :description)
+  end
+
+  def note_params
+    params.require(:note).permit(:content, :notable_type, :notable_id)
+  end
+
+  def retrieve_notes_for_users(users)
+    user_ids = users.pluck(:id)
+    Note.where(notable_type: users.first.class.name, notable_id: user_ids).group_by(&:notable_id)
   end
 end

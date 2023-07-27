@@ -1,16 +1,16 @@
 <div class="p-6 bg-white shadow-md rounded-lg">
   <% if @collaborators_data.any? %>
-    <h2 class="text-2xl font-semibold mb-4">Collaborators</h2>
+    <h2 class="text-2xl font-semibold mb-6">Collaborators</h2>
     <% @collaborators_data.each do |collaborator| %>
-      <div class="mb-8 border-b-2 pb-4">
-        <h3 class="text-xl font-semibold mb-2">Login: <%= collaborator.login %></h3>
-        <div class="flex items-center mb-4">
-          <img src="<%= collaborator.avatar_url %>" alt="Avatar" class="w-10 h-10 rounded-full mr-2">
+      <div class="mb-8 border-b-2 pb-6">
+        <h3 class="text-xl font-semibold mb-4">Login: <%= collaborator.login %></h3>
+        <div class="flex items-center mb-6">
+          <img src="<%= collaborator.avatar_url %>" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
           <p class="text-sm">HTML URL: <a href="<%= collaborator.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= collaborator.html_url %></a></p>
         </div>
         <div id="subscriptions-<%= collaborator.login %>" class="mb-6">
           <h4 class="text-lg font-semibold mb-2">Subscriptions:</h4>
-          <ul>
+          <ul class="list-disc pl-8">
             <% collaborator.subscriptions.each do |subscription| %>
               <li><%= subscription %></li>
             <% end %>
@@ -18,12 +18,45 @@
         </div>
         <div id="organizations-<%= collaborator.login %>">
           <h4 class="text-lg font-semibold mb-2">Organizations:</h4>
-          <ul>
+          <ul class="list-disc pl-8">
             <% collaborator.organizations.each do |organization| %>
               <li><%= organization %></li>
             <% end %>
           </ul>
         </div>
+
+        <!-- Display notes for the current collaborator -->
+        <% collaborator_notes = @collaborators_notes[collaborator.id] %>
+        <% if collaborator_notes && collaborator_notes.any? %>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold mb-2">Notes for <%= collaborator.login %>:</h4>
+            <ul class="list-disc pl-8">
+              <% collaborator_notes.each do |note| %>
+                <li class="mb-2 flex items-center">
+                  <span class="bg-gray-100 px-3 py-2 rounded-lg inline-block flex-grow"><%= note.content %></span>
+                  <%= button_to "Delete", delete_note_dashboard_path(note), method: :delete, data: { confirm: "Are you sure you want to delete this note?" }, class: "bg-red-500 text-white font-semibold py-2 px-4 rounded-lg ml-4", form_class: "note-delete-form" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        <% else %>
+          <p>No notes for <%= collaborator.login %>.</p>
+        <% end %>
+
+        <!-- Form to create a new note for the collaborator -->
+        <%= form_with(model: Note.new, url: create_note_dashboard_path) do |form| %>
+          <%= form.hidden_field :user_id, value: current_user.id %>
+          <%= form.hidden_field :notable_type, value: "Collaborator" %>
+          <%= form.hidden_field :notable_id, value: collaborator.id %>
+
+          <div class="mb-4">
+            <%= form.label :content, class: "block font-semibold mb-2" %>
+            <%= form.text_area :content, class: "w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200", rows: 4 %>
+          </div>
+
+          <%= form.submit "Create Note", class: "bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg" %>
+        <% end %>
+
       </div>
     <% end %>
   <% else %>
@@ -31,15 +64,48 @@
   <% end %>
 
   <% if @owners_data.any? %>
-    <h2 class="text-2xl font-semibold mt-8 mb-4">Owners</h2>
-    <ol class="list-decimal pl-6">
+    <h2 class="text-2xl font-semibold mt-8 mb-6">Owners</h2>
+    <ol class="list-decimal pl-8">
       <% @owners_data.each do |owner| %>
-        <li class="mb-6 border-b-2 pb-4">
-          <h3 class="text-xl font-semibold mb-2">Owner: <%= owner.login %></h3>
-          <ul>
+        <li class="mb-6 border-b-2 pb-6">
+          <h3 class="text-xl font-semibold mb-4">Owner: <%= owner.login %></h3>
+          <ul class="list-disc pl-8">
             <li><strong>Login:</strong> <%= owner.login %></li>
             <li><strong>URL:</strong> <a href="<%= owner.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= owner.html_url %></a></li>
           </ul>
+
+          <!-- Display notes for the current owner -->
+          <% owner_notes = @owners_notes[owner.id] %>
+          <% if owner_notes && owner_notes.any? %>
+            <div class="mb-4">
+              <h4 class="text-lg font-semibold mb-2">Notes for <%= owner.login %>:</h4>
+              <ul class="list-disc pl-8">
+                <% owner_notes.each do |note| %>
+                  <li class="mb-2 flex items-center">
+                    <span class="bg-gray-100 px-3 py-2 rounded-lg inline-block flex-grow"><%= note.content %></span>
+                    <%= button_to "Delete", delete_note_dashboard_path(note), method: :delete, data: { confirm: "Are you sure you want to delete this note?" }, class: "bg-red-500 text-white font-semibold py-2 px-4 rounded-lg ml-4", form_class: "note-delete-form" %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% else %>
+            <p>No notes for <%= owner.login %>.</p>
+          <% end %>
+
+          <!-- Form to create a new note for the owner -->
+          <%= form_with(model: Note.new, url: create_note_dashboard_path) do |form| %>
+            <%= form.hidden_field :user_id, value: current_user.id %>
+            <%= form.hidden_field :notable_type, value: "Owner" %>
+            <%= form.hidden_field :notable_id, value: owner.id %>
+
+            <div class="mb-4">
+              <%= form.label :content, class: "block font-semibold mb-2" %>
+              <%= form.text_area :content, class: "w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200", rows: 4 %>
+            </div>
+
+            <%= form.submit "Create Note", class: "bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg" %>
+          <% end %>
+
         </li>
       <% end %>
     </ol>
