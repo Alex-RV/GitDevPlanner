@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_26_014814) do
+ActiveRecord::Schema.define(version: 2023_07_27_020624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,11 +45,13 @@ ActiveRecord::Schema.define(version: 2023_07_26_014814) do
 
   create_table "notes", force: :cascade do |t|
     t.text "content"
-    t.string "noteable_type", null: false
-    t.bigint "noteable_id", null: false
+    t.bigint "user_id"
+    t.string "notable_type"
+    t.bigint "notable_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["noteable_type", "noteable_id"], name: "index_notes_on_noteable"
+    t.index ["notable_type", "notable_id"], name: "index_notes_on_notable"
+    t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
   create_table "owners", force: :cascade do |t|
@@ -104,6 +106,7 @@ ActiveRecord::Schema.define(version: 2023_07_26_014814) do
   end
 
   add_foreign_key "collaborators", "users"
+  add_foreign_key "notes", "users"
   add_foreign_key "owners", "users"
   add_foreign_key "repositories", "users"
   add_foreign_key "tasks", "repositories"

@@ -2,8 +2,10 @@
 
 one:
   content: MyText
-  repository: one
+  user: 
+  notable: 
 
 two:
   content: MyText
-  repository: two
+  user: 
+  notable: 

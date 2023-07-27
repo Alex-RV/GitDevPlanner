@@ -1,8 +1,8 @@
-require 'active_support/time'
 class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def dashboard
+
   end
 
   def repositories
@@ -68,7 +68,4 @@ class DashboardController < ApplicationController
   def task_params
     params.require(:task).permit(:repository_id, :title, :description)
   end
-  
-
-  
 end
