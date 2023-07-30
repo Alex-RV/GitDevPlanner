@@ -14,7 +14,7 @@
               <li class="py-2 border-b border-gray-300 last:border-b-0">
                 <strong><%= task.title %></strong>
                 <p><%= task.description %></p>
-                <%= button_to "Delete", delete_task_path(task), method: :delete, data: { confirm: "Are you sure you want to delete this task?" }, class: "text-red-500 ml-2", form_class: "task-delete-form bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition" %>
+                <%= button_to "Delete", delete_task_path(task), method: :delete, data: { confirm: "Are you sure you want to delete this task?" }, class: "text-red-500 ml-2", form_class: "task-delete-form" %>
               </li>
             <% end %>
           </ul>
@@ -24,6 +24,6 @@
       </div>
     <% end %>
   <% else %>
-    <p class="col-span-full text-center">No repositories with tasks found.</p>
+    <p class="col-span-full text-center text-green-800">No repositories with tasks found.</p>
   <% end %>
 </div>
