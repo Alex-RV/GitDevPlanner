@@ -1,4 +1,29 @@
-<div>
-  <h1 class="font-bold text-4xl">Dashboard#dashboard</h1>
-  <p>Find me in app/views/dashboard/dashboard.html.erb</p>
+<div class="p-6 bg-gray-100 rounded-lg grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+  <% if @repos_with_tasks.any? %>
+    <h2 class="text-3xl font-bold mb-8 col-span-full text-center text-green-800">Repositories with Tasks</h2>
+    <% @repos_with_tasks.each do |repository| %>
+      <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
+        <h3 class="text-xl font-semibold mb-2 px-4 pt-4">Repository: <%= repository.name %></h3>
+        <p class="px-4 pb-2">Last Commit: <%= repository.last_commit_date %></p>
+
+        <% tasks = repository.tasks %>
+        <% if tasks.any? %>
+          <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Tasks:</h4>
+          <ul class="px-4">
+            <% tasks.each do |task| %>
+              <li class="py-2 border-b border-gray-300 last:border-b-0">
+                <strong><%= task.title %></strong>
+                <p><%= task.description %></p>
+                <%= button_to "Delete", delete_task_path(task), method: :delete, data: { confirm: "Are you sure you want to delete this task?" }, class: "text-red-500 ml-2", form_class: "task-delete-form bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition" %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="mt-4 px-4">No tasks found for this repository.</p>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="col-span-full text-center">No repositories with tasks found.</p>
+  <% end %>
 </div>

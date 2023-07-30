@@ -2,8 +2,15 @@ class DashboardController < ApplicationController
   before_action :authenticate_user!
 
   def dashboard
+    @user = current_user
+    @repos_with_tasks = @user.repositories.joins(:tasks).distinct
 
+    # Retrieve repositories without tasks
+    # @repos_without_tasks = @user.repositories.where.not(id: @repos_with_tasks.pluck(:id))
+
+    @tasks = @user.tasks
   end
+
 
   def repositories
     @user = current_user
