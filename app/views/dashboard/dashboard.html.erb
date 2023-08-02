@@ -4,7 +4,7 @@
     <% @repos_with_tasks.each do |repository| %>
       <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
         <h3 class="text-xl font-semibold mb-2 px-4 pt-4">Repository: <%= repository.name %></h3>
-        <p class="px-4 pb-2">Last Commit: <%= repository.last_commit_date %></p>
+        <p class="px-4 pb-2">Last Commit: <%= repository.last_commit_date.strftime('%B %e, %Y %l:%M%P') %></p>
 
         <% tasks = repository.tasks %>
         <% if tasks.any? %>
@@ -25,5 +25,35 @@
     <% end %>
   <% else %>
     <p class="col-span-full text-center">No repositories with tasks found.</p>
+  <% end %>
+  
+  <% if @collaborators_with_notes.any? %>
+    <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Collaborators with Tasks</h2>
+    <% @collaborators_with_notes.each do |collaborator| %>
+      <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
+        <h3 class="text-xl font-semibold mb-4 px-4 pt-4">Login: <%= collaborator.login %></h3>
+        <div class="flex items-center mb-6 px-4">
+          <img src="<%= collaborator.avatar_url %>" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+          <p class="text-sm">HTML URL: <a href="<%= collaborator.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= collaborator.html_url %></a></p>
+        </div>
+
+        <% notes = collaborator.notes %>
+        <% if notes.any? %>
+          <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Notes:</h4>
+          <ul class="px-4">
+            <% notes.each do |note| %>
+              <li class="py-2 border-b border-gray-300 last:border-b-0">
+                <p><%= note.content %></p>
+                <%= button_to "Delete", delete_note_dashboard_path(note), method: :delete, data: { confirm: "Are you sure you want to delete this note?" }, class: "text-red-500 ml-2 bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition", form_class: "note-delete-form" %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="mt-4 px-4">No notes found for this collaborator.</p>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="col-span-full text-center">No collaborators with notes found.</p>
   <% end %>
 </div>

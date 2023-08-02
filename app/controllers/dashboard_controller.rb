@@ -5,7 +5,7 @@ class DashboardController < ApplicationController
     @user = current_user
     @repos_with_tasks = @user.repositories.joins(:tasks).distinct
     @collaborators_with_notes = @user.collaborators.joins(:notes).distinct
-
+    @owners_with_notes = @user.owners.joins(:notes).distinct
 
     # Retrieve repositories without tasks
     # @repos_without_tasks = @user.repositories.where.not(id: @repos_with_tasks.pluck(:id))
