@@ -1,1 +1,34 @@
-<%= button_to 'sign in with Github', '/auth/github', data: { turbo: false } %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sidebar</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#158f3e">
+  <meta name="msapplication-TileColor" content="#2b5797">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+  <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div class="max-w-md bg-white shadow-lg rounded-lg px-8 py-6 md:p-10 w-full">
+      <h2 class="text-3xl font-bold mb-6 md:mb-10 text-center text-green-800">Welcome to GitDevPlanner</h2>
+      <p class="text-gray-600 text-lg mb-8 md:mb-12 text-center">
+        GitDevPlanner is a platform that allows developers to view their GitHub repositories,
+        track their activity, and create plans for future work. It provides a centralized space to
+        organize tasks, set goals, and efficiently manage development projects within the GitHub ecosystem.
+      </p>
+      <div class="flex justify-center mb-8 md:mb-12">
+        <img class="w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-green-500 shadow-md" src="<%= asset_path('gitdevplannerlogo.svg') %>" alt="Icon">
+      </div>
+      <div class="flex justify-center">
+        <%= button_to 'Sign in with GitHub', '/auth/github', class: "bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-full font-semibold text-lg shadow-md" %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
