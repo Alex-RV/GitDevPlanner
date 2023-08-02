@@ -1,54 +1,58 @@
 <div class="container mx-auto py-8 px-4">
   <% if @repos_data.any? %>
-    <h2 class="text-2xl font-semibold mb-4">Repositories</h2>
-    <ol class="list-decimal pl-6 mb-8">
-      <% @repos_data.each do |repo| %>
-        <li class="mb-6 border-b pb-4">
-          <h3 class="text-xl font-semibold mb-2"><%= repo.name %></h3>
-          <ul class="space-y-2">
-            <li><strong>Owner:</strong> <%= repo.owner_login %></li>
-            <li><strong>URL:</strong> <%= repo.html_url %></li>
-            <li><strong>Private Status:</strong> <%= repo.private ? 'Private' : 'Public' %></li>
-            <li>
-              <strong>Last non-code related updates:</strong>
-              <%= repo.updated_repo_at.strftime('%B %e, %Y %l:%M%P') %>
-            </li>
-            <li>
-              <strong>Last code related updates:</strong>
-              <%= repo.pushed_at.strftime('%B %e, %Y %l:%M%P') %>
-            </li>
-            <% if repo.last_commit_message %>
+    <h2 class="text-3xl font-bold mb-8 text-center">Repositories</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @repos_data.each.with_index(1) do |repo, index| %>
+        <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
+          <div class="p-6">
+            <h3 class="text-xl font-semibold mb-2"><%= "#{index}. #{repo.name}" %></h3>
+            <ul class="space-y-2">
+              <li><strong>Owner:</strong> <%= repo.owner_login %></li>
+              <li><strong>URL:</strong> <%= repo.html_url %></li>
+              <li><strong>Private Status:</strong> <%= repo.private ? 'Private' : 'Public' %></li>
               <li>
-                <strong>Last commit:</strong>
-                <%= repo.last_commit_date.strftime('%B %e, %Y %l:%M%P')%>
+                <strong>Last non-code related updates:</strong>
+                <%= repo.updated_repo_at.strftime('%B %e, %Y %l:%M%P') %>
               </li>
-              <li><strong>Commit Message:</strong> <%= repo.last_commit_message %></li>
-              <li><strong>Commit Author:</strong> <%= repo.last_commit_author %></li>
-            <% else %>
-              <li><strong>No commits found for this repository.</strong></li>
-            <% end %>
-          </ul>
+              <li>
+                <strong>Last code related updates:</strong>
+                <%= repo.pushed_at.strftime('%B %e, %Y %l:%M%P') %>
+              </li>
+              <% if repo.last_commit_message %>
+                <li>
+                  <strong>Last commit:</strong>
+                  <%= repo.last_commit_date.strftime('%B %e, %Y %l:%M%P') %>
+                </li>
+                <li><strong>Commit Message:</strong> <%= repo.last_commit_message %></li>
+                <li><strong>Commit Author:</strong> <%= repo.last_commit_author %></li>
+              <% else %>
+                <li><strong>No commits found for this repository.</strong></li>
+              <% end %>
+            </ul>
+          </div>
 
           <% repo_tasks = @tasks.select { |task| task.repository_id == repo.id } %>
           <% if repo_tasks.any? %>
-            <h4 class="text-lg font-semibold mb-2 mt-4">Tasks:</h4>
-            <ul class="list-disc pl-6 space-y-2">
-              <% repo_tasks.each do |task| %>
-                <li class="flex justify-between items-center border rounded px-4 py-2 mt-2 hover:bg-gray-50 transition-colors">
-                  <div>
-                    <strong>Title:</strong> <%= task.title %>
-                    <br>
-                    <strong>Description:</strong> <%= task.description %>
-                  </div>
-                  <%= button_to 'Delete Task', delete_task_path(task), method: :delete, data: { confirm: 'Are you sure you want to delete this task?' }, class: 'bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded shadow-md transition-colors' %>
-                </li>
-              <% end %>
-            </ul>
+            <div class="p-6">
+              <h4 class="text-lg font-semibold mb-2">Tasks:</h4>
+              <ul class="list-disc pl-6 space-y-2">
+                <% repo_tasks.each do |task| %>
+                  <li class="flex justify-between items-center border rounded px-4 py-2 mt-2 hover:bg-gray-100 transition-colors">
+                    <div>
+                      <strong>Title:</strong> <%= task.title %>
+                      <br>
+                      <strong>Description:</strong> <%= task.description %>
+                    </div>
+                    <%= button_to 'Delete Task', delete_task_path(task), method: :delete, data: { confirm: 'Are you sure you want to delete this task?' }, class: 'bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded shadow-md transition-colors' %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
           <% else %>
-            <p class="mt-4">No tasks associated with this repository.</p>
+            <p class="p-6">No tasks associated with this repository.</p>
           <% end %>
 
-          <div class="mt-6">
+          <div class="p-6">
             <%= form_with(model: Task.new, url: create_task_path, method: :post, class: 'space-y-4') do |form| %>
               <%= form.hidden_field :repository_id, value: repo.id %>
 
@@ -67,11 +71,10 @@
               </div>
             <% end %>
           </div>
-
-        </li>
+        </div>
       <% end %>
-    </ol>
+    </div>
   <% else %>
-    <p>No repositories found.</p>
+    <p class="text-center">No repositories found.</p>
   <% end %>
 </div>

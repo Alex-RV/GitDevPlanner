@@ -1,3 +1,4 @@
+<!-- dashboard.html.erb -->
 <div class="p-6 bg-gray-100 rounded-lg grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
   <% if @repos_with_tasks.any? || @collaborators_with_notes.any? || @owners_with_notes.any? %>
     <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Data Overview:</h2>
@@ -26,6 +27,8 @@
           <% end %>
         </div>
       <% end %>
+    <% else %>
+      <p class="col-span-full text-center mt-8">No repositories with tasks found. <a href="<%= repositories_path %>" class="text-blue-500 underline">Click here</a> to add repositories with tasks.</p>
     <% end %>
 
     <% if @collaborators_with_notes.any? %>
@@ -54,6 +57,8 @@
           <% end %>
         </div>
       <% end %>
+    <% else %>
+      <p class="col-span-full text-center mt-8">No collaborators with notes found. <a href="<%= people_path %>" class="text-blue-500 underline">Click here</a> to add collaborators with notes.</p>
     <% end %>
 
     <% if @owners_with_notes.any? %>
@@ -81,6 +86,8 @@
           <% end %>
         </div>
       <% end %>
+    <% else %>
+      <p class="col-span-full text-center mt-8">No owners with notes found. <a href="<%= people_path %>" class="text-blue-500 underline">Click here</a> to add owners with notes.</p>
     <% end %>
 
   <% else %>

@@ -1,3 +1,4 @@
+<!-- settings.html.erb -->
 <div class="min-h-screen bg-gray-100 flex items-center justify-center">
   <div class="max-w-3xl bg-white shadow-lg rounded-lg px-8 py-6 md:p-10 w-full">
     <div class="flex items-center justify-center mb-6 md:mb-10">
@@ -18,8 +19,8 @@
         <p class="text-gray-800 text-lg break-all overflow-auto"><%= current_user.email %></p>
       </div>
       <div class="bg-purple-100 px-6 py-4 rounded-lg shadow-md">
-        <h3 class="text-xl font-bold mb-3 text-purple-800">Avatar URL:</h3>
-        <p class="text-gray-800 text-lg break-all overflow-auto"><%= current_user.avatar_url %></p>
+        <h3 class="text-xl font-bold mb-3 text-purple-800">Your URL:</h3>
+        <a href="<%= 'https://github.com/' + current_user.nickname %>" target="_blank" class="text-blue-500 text-lg break-all overflow-auto underline hover:no-underline"><%= 'https://github.com/' + current_user.nickname %></a>
       </div>
     </div>
     <div class="mt-8 md:mt-12 flex justify-end">
