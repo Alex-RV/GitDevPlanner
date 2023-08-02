@@ -1,88 +1,90 @@
 <div class="p-6 bg-gray-100 rounded-lg grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-  <% if @repos_with_tasks.any? %>
-    <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Repositories with Tasks:</h2>
-    <% @repos_with_tasks.each do |repository| %>
-      <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
-        <h3 class="text-xl font-semibold mb-2 px-4 pt-4">Repository: <%= repository.name %></h3>
-        <p class="px-4 pb-2">Last Commit: <%= repository.last_commit_date.strftime('%B %e, %Y %l:%M%P') %></p>
+  <% if @repos_with_tasks.any? || @collaborators_with_notes.any? || @owners_with_notes.any? %>
+    <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Data Overview:</h2>
 
-        <% tasks = repository.tasks %>
-        <% if tasks.any? %>
-          <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Tasks:</h4>
-          <ul class="px-4">
-            <% tasks.each do |task| %>
-              <li class="py-2 border-b border-gray-300 last:border-b-0">
-                <strong><%= task.title %></strong>
-                <p><%= task.description %></p>
-                <%= button_to "Delete", delete_task_path(task), method: :delete, data: { confirm: "Are you sure you want to delete this task?" }, class: "text-red-500 ml-2 bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition", form_class: "task-delete-form" %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="mt-4 px-4">No tasks found for this repository.</p>
-        <% end %>
-      </div>
-    <% end %>
-  <% else %>
-    <p class="col-span-full text-center mt-8">No repositories with tasks found. <a href="<%= repositories_path %>" class="text-blue-500 underline">Click here</a> to add repositories with tasks.</p>
-  <% end %>
-  
-  <% if @collaborators_with_notes.any? %>
-    <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Collaborators with Notes:</h2>
-    <% @collaborators_with_notes.each do |collaborator| %>
-      <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
-        <h3 class="text-xl font-semibold mb-4 px-4 pt-4">Login: <%= collaborator.login %></h3>
-        <div class="flex items-center mb-6 px-4">
-          <img src="<%= collaborator.avatar_url %>" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
-          <p class="text-sm">URL: <a href="<%= collaborator.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= collaborator.html_url %></a></p>
+    <% if @repos_with_tasks.any? %>
+      <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Repositories with Tasks:</h2>
+      <% @repos_with_tasks.each do |repository| %>
+        <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
+          <h3 class="text-xl font-semibold mb-2 px-4 pt-4">Repository: <%= repository.name %></h3>
+          <p class="px-4 pb-2">Last Commit: <%= repository.last_commit_date.strftime('%B %e, %Y %l:%M%P') %></p>
+
+          <% tasks = repository.tasks %>
+          <% if tasks.any? %>
+            <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Tasks:</h4>
+            <ul class="px-4">
+              <% tasks.each do |task| %>
+                <li class="py-2 border-b border-gray-300 last:border-b-0">
+                  <strong><%= task.title %></strong>
+                  <p><%= task.description %></p>
+                  <%= button_to "Delete", delete_task_path(task), method: :delete, data: { confirm: "Are you sure you want to delete this task?" }, class: "text-red-500 ml-2 bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition", form_class: "task-delete-form" %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="mt-4 px-4">No tasks found for this repository.</p>
+          <% end %>
         </div>
-
-        <% notes = collaborator.notes %>
-        <% if notes.any? %>
-          <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Notes:</h4>
-          <ul class="px-4">
-            <% notes.each do |note| %>
-              <li class="py-2 border-b border-gray-300 last:border-b-0">
-                <p><%= note.content %></p>
-                <%= button_to "Delete", delete_note_dashboard_path(note), method: :delete, data: { confirm: "Are you sure you want to delete this note?" }, class: "text-red-500 ml-2 bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition", form_class: "note-delete-form" %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="mt-4 px-4">No notes found for this collaborator.</p>
-        <% end %>
-      </div>
+      <% end %>
     <% end %>
-  <% else %>
-    <p class="col-span-full text-center mt-8">No collaborators with notes found. <a href="<%= people_path %>" class="text-blue-500 underline">Click here</a> to add collaborators with notes.</p>
-  <% end %>
 
-  <% if @owners_with_notes.any? %>
-    <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Owners of Repos with Notes:</h2>
-    <% @owners_with_notes.each do |owner| %>
-      <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
-        <h3 class="text-xl font-semibold mb-4 px-4 pt-4">Login: <%= owner.login %></h3>
-        <div class="flex items-center mb-6 px-4">
-          <p class="text-sm">URL: <a href="<%= owner.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= owner.html_url %></a></p>
+    <% if @collaborators_with_notes.any? %>
+      <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Collaborators with Notes:</h2>
+      <% @collaborators_with_notes.each do |collaborator| %>
+        <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
+          <h3 class="text-xl font-semibold mb-4 px-4 pt-4">Login: <%= collaborator.login %></h3>
+          <div class="flex items-center mb-6 px-4">
+            <img src="<%= collaborator.avatar_url %>" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+            <p class="text-sm">URL: <a href="<%= collaborator.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= collaborator.html_url %></a></p>
+          </div>
+
+          <% notes = collaborator.notes %>
+          <% if notes.any? %>
+            <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Notes:</h4>
+            <ul class="px-4">
+              <% notes.each do |note| %>
+                <li class="py-2 border-b border-gray-300 last:border-b-0">
+                  <p><%= note.content %></p>
+                  <%= button_to "Delete", delete_note_dashboard_path(note), method: :delete, data: { confirm: "Are you sure you want to delete this note?" }, class: "text-red-500 ml-2 bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition", form_class: "note-delete-form" %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="mt-4 px-4">No notes found for this collaborator.</p>
+          <% end %>
         </div>
-
-        <% notes = owner.notes %>
-        <% if notes.any? %>
-          <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Notes:</h4>
-          <ul class="px-4">
-            <% notes.each do |note| %>
-              <li class="py-2 border-b border-gray-300 last:border-b-0">
-                <p><%= note.content %></p>
-                <%= button_to "Delete", delete_note_dashboard_path(note), method: :delete, data: { confirm: "Are you sure you want to delete this note?" }, class: "text-red-500 ml-2 bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition", form_class: "note-delete-form" %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="mt-4 px-4">No notes found for this owner.</p>
-        <% end %>
-      </div>
+      <% end %>
     <% end %>
+
+    <% if @owners_with_notes.any? %>
+      <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Owners of Repos with Notes:</h2>
+      <% @owners_with_notes.each do |owner| %>
+        <div class="bg-white rounded-lg shadow-md transform hover:scale-105 transition">
+          <h3 class="text-xl font-semibold mb-4 px-4 pt-4">Login: <%= owner.login %></h3>
+          <div class="flex items-center mb-6 px-4">
+            <p class="text-sm">URL: <a href="<%= owner.html_url %>" class="text-blue-500" target="_blank" rel="noopener noreferrer"><%= owner.html_url %></a></p>
+          </div>
+
+          <% notes = owner.notes %>
+          <% if notes.any? %>
+            <h4 class="text-lg font-semibold mt-4 mb-2 px-4">Notes:</h4>
+            <ul class="px-4">
+              <% notes.each do |note| %>
+                <li class="py-2 border-b border-gray-300 last:border-b-0">
+                  <p><%= note.content %></p>
+                  <%= button_to "Delete", delete_note_dashboard_path(note), method: :delete, data: { confirm: "Are you sure you want to delete this note?" }, class: "text-red-500 ml-2 bg-red-100 px-2 py-1 rounded-lg hover:bg-red-200 transition", form_class: "note-delete-form" %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="mt-4 px-4">No notes found for this owner.</p>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+
   <% else %>
-    <p class="col-span-full text-center mt-8">No owners with notes found. <a href="<%= people_path %>" class="text-blue-500 underline">Click here</a> to add owners with notes.</p>
+    <h2 class="text-3xl font-bold mb-8 col-span-full text-center">Start Adding Data:</h2>
+    <p class="col-span-full text-center mt-8">There are no repositories, collaborators, or owners with tasks/notes. <a href="<%= repositories_path %>" class="text-blue-500 underline">Click here</a> to add repositories with tasks, and <a href="<%= people_path %>" class="text-blue-500 underline">click here</a> to add collaborators/owners with notes.</p>
   <% end %>
 </div>

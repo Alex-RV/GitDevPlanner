@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-  </head>
-  <body>
-    <div class="flex flex-col h-screen bg-green-800 w-64 fixed top-0 left-0">
-      <div class="flex items-center justify-left h-20 pl-5 mb-6 text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sidebar</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Mobile Menu -->
+  <div class="md:hidden">
+    <button class="fixed z-50 top-5 right-5 p-2 text-white">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+    <div class="fixed top-0 left-0 h-screen w-64 bg-green-800 p-4 transform translate-x-full transition-transform ease-in-out" id="mobileMenu">
+      <!-- Content of the sidebar (same as original code) -->
+      <div class="flex items-center justify-left h-20 mb-6 text-white">
         <h1 class="text-2xl font-bold">Git Dev Planner</h1>
       </div>
       <div class="flex-grow overflow-y-auto">
@@ -53,42 +61,82 @@
             <img src="<%= current_user.avatar_url %>" alt="Profile Picture" width="20" height="20" class="w-8 h-8 rounded-full">
             <div>
               <p class="font-semibold text-white"><%= current_user.nickname %></p>
-              <p class="font-semibold text-white"><%= current_user.email %></p>
-              <p class="font-semibold text-white"><%= current_user.id %></p>
             </div>
           </div>
-          <% if user_signed_in? %>
-              <%= button_to 'Log out', logout_path, method: :delete, class: "bg-red-500 hover:bg-red-600 px-4 py-2 rounded" %>
-          <% else %>
-            <li>
-              <%= button_to 'Sign in with GitHub', '/auth/github', data: { turbo: false }, class: "bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded" %>
-            </li>
-          <% end %>
         </div>
       </div>
     </div>
-  </body>
-  <%# <script>
-document.addEventListener('DOMContentLoaded', function () {
-  function fetchData() {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', '/data/fetch_data', true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          const responseData = JSON.parse(xhr.responseText);
-          console.log(responseData); // Process the response data
-        } else {
-          console.error('Error fetching data:', xhr.statusText);
-        }
-      }
-    };
-    xhr.send();
-  }
+    <div class="fixed top-0 left-0 h-screen w-screen bg-black opacity-50 hidden" id="mobileMenuBackdrop"></div>
+  </div>
 
-  // Trigger the long polling when the page loads
-  fetchData();
-});
+  <!-- Desktop Sidebar -->
+  <div class="hidden md:flex flex-col h-screen bg-green-800 w-64 fixed top-0 left-0">
+    <!-- Content of the sidebar (same as original code) -->
+    <div class="flex items-center justify-left h-20 mb-6 text-white">
+      <h1 class="text-2xl font-bold">Git Dev Planner</h1>
+    </div>
+    <div class="flex-grow overflow-y-auto">
+      <div class="flex flex-col">
+        <a href="/dashboard"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-700 dark:hover:bg-gray-800 <%= current_page?(dashboard_path) ? 'bg-green-700' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/explore.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(dashboard_path) ? 'text-green-300' : 'text-white' %>">Dashboard</span>
+            </div>
+          </a>
+          <a href="/repositories"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-600 dark:hover:bg-gray-800 <%= current_page?(repositories_path) ? 'bg-green-700' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/explore.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(repositories_path) ? 'text-green-300' : 'text-white' %>">Repositories</span>
+            </div>
+          </a>
+          <a href="/people"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-600 dark:hover:bg-gray-800 <%= current_page?(people_path) ? 'bg-green-700' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/people.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(people_path) ? 'text-green-300' : 'text-white' %>">People</span>
+            </div>
+          </a>
+          <a href="/settings"
+             class="flex items-center py-3 pl-5 transition-all hover:bg-green-600 dark:hover:bg-gray-800 <%= current_page?(settings_path) ? 'bg-green-700' : 'text-white' %>">
+            <div class="flex flex-row">
+              <div>
+                <img src="<%= asset_path('sidebar/settings.svg') %>" alt="" width="20" height="20">
+              </div>
+              <span class="ml-3 <%= current_page?(settings_path) ? 'text-green-300' : 'text-white' %>">Settings</span>
+            </div>
+          </a>
+          <div class="flex items-center space-x-2 pl-5 mt-16">
+            <img src="<%= current_user.avatar_url %>" alt="Profile Picture" width="20" height="20" class="w-8 h-8 rounded-full">
+            <div>
+              <p class="font-semibold text-white"><%= current_user.nickname %></p>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
 
-  </script> %>
+  <script>
+    const mobileMenuButton = document.querySelector('.md\\:hidden button');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuBackdrop = document.getElementById('mobileMenuBackdrop');
+
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('-translate-x-full');
+      mobileMenuBackdrop.classList.toggle('hidden');
+    });
+
+    mobileMenuBackdrop.addEventListener('click', () => {
+      mobileMenu.classList.toggle('-translate-x-full');
+      mobileMenuBackdrop.classList.toggle('hidden');
+    });
+  </script>
+</body>
 </html>

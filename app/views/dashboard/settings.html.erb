@@ -1,0 +1,29 @@
+<div class="min-h-screen bg-gray-100 flex items-center justify-center">
+  <div class="max-w-3xl bg-white shadow-lg rounded-lg px-8 py-6 md:p-10 w-full">
+    <div class="flex items-center justify-center mb-6 md:mb-10">
+      <img class="w-16 h-16 md:w-24 md:h-24 rounded-full border-2 border-blue-500" src="<%= current_user.avatar_url %>" alt="Profile Picture">
+    </div>
+    <h2 class="text-3xl font-bold mb-6 md:mb-10 text-center">Profile Settings</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+      <div class="bg-blue-100 px-6 py-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-3 text-blue-800">Nickname:</h3>
+        <p class="text-gray-800 text-lg break-all overflow-auto"><%= current_user.nickname %></p>
+      </div>
+      <div class="bg-green-100 px-6 py-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-3 text-green-800">GitHub Access Token:</h3>
+        <p class="text-gray-800 text-lg break-all overflow-auto"><%= current_user.github_access_token %></p>
+      </div>
+      <div class="bg-yellow-100 px-6 py-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-3 text-yellow-800">Email:</h3>
+        <p class="text-gray-800 text-lg break-all overflow-auto"><%= current_user.email %></p>
+      </div>
+      <div class="bg-purple-100 px-6 py-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-3 text-purple-800">Avatar URL:</h3>
+        <p class="text-gray-800 text-lg break-all overflow-auto"><%= current_user.avatar_url %></p>
+      </div>
+    </div>
+    <div class="mt-8 md:mt-12 flex justify-end">
+      <%= button_to 'Log out', logout_path, method: :delete, class: "text-red-500 font-semibold text-lg hover:underline" %>
+    </div>
+  </div>
+</div>
