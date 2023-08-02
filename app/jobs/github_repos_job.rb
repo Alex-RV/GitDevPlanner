@@ -37,10 +37,11 @@ class GithubReposJob < ApplicationJob
 
       if repo['last_commit'].is_a?(Hash)
         last_commit = repo['last_commit']
-        repo_data[:last_commit_date] = Time.parse(last_commit['date']).in_time_zone('Pacific Time (US & Canada)').strftime('%Y-%m-%d %H:%M:%S')
-        repo_data[:last_commit_sha] = last_commit['sha']
-        repo_data[:last_commit_message] = last_commit['message']
-        repo_data[:last_commit_author] = last_commit['author']
+        puts "LAST!!!", last_commit[:date].in_time_zone('Pacific Time (US & Canada)')
+        repo_data[:last_commit_date] = last_commit[:date].in_time_zone('Pacific Time (US & Canada)').strftime('%B %e, %Y %l:%M%P')
+        repo_data[:last_commit_sha] = last_commit[:sha]
+        repo_data[:last_commit_message] = last_commit[:message]
+        repo_data[:last_commit_author] = last_commit[:author]
       end
 
       repository = Repository.find_or_create_by(name: repo_data[:name], repository_id: repo_data[:repository_id])

@@ -5,6 +5,7 @@
   <ol class="list-decimal pl-6 mb-8">
     <% @repos_data.each do |repo| %>
       <li class="mb-6">
+        <h3 class="text-xl font-semibold mb-2">All data: <%= repo %></h3>
         <h3 class="text-xl font-semibold mb-2">Repository: <%= repo['last_commit'] %></h3>
         <ul>
           <li><strong>Name:</strong> <%= repo['name'] %></li>
