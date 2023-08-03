@@ -3,7 +3,7 @@
 Hello everyone!
 
 I am excited to introduce you to my latest project, GitDevPlanner. This platform has been crafted with passion and dedication to provide developers like you with an efficient way to manage your GitHub repositories, track your activities, and plan future work within the GitHub ecosystem.
-![Login Screen]([https://github.com/Alex-RV/Flask/blob/master/static/images/screen_home.png](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/login_screen.png))
+![Login Screen](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/login_screen.png)
 
 ## My Inspiration
 
@@ -35,7 +35,7 @@ Fetching data in real-time can cause delays for users, especially when dealing w
 When a user initiates the fetch process by entering the desired page, the job is queued, and the user can continue using the platform without interruptions. The job performs the data fetch and saves it to the database, ensuring data is always up-to-date while keeping the platform responsive.
 
 ## Saving to the Database
-![Repos Screen]([https://github.com/Alex-RV/Flask/blob/master/static/images/screen_home.png](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/repositories_screen.png))
+![Repos Screen](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/repositories_screen.png)
 
 Upon fetching the repository data, the `GithubReposJob` class ensures the relevant information is correctly stored in the database. The job sorts the repositories based on their last commit date to organize the data effectively.
 ```class GithubReposJob < ApplicationJob
@@ -55,15 +55,16 @@ user.repositories << repository
 end
 ```
 
-For each repository, crucial details like repository ID, name, owner login, HTML URL, privacy status, and the last commit information are saved. This process ensures that users can quickly access their repositories and the associated data without any delay.
+For each repository, crucial details like repository ID, name, owner login, HTML URL, privacy status, and the last commit information are saved. Similar approach for the people information. This process ensures that users can quickly access their repositories and the associated data without any delay.
+![People Screen](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/people_screen.png)
 
 ## System Design and Functionality
 
 The GitDevPlanner platform offers a user-friendly interface developed with Tailwind CSS, allowing developers to view and manage their GitHub repositories seamlessly. Users can track their activities, set goals, and create plans for future work, all from within the GitHub ecosystem.
-![Profile Screen]([https://github.com/Alex-RV/Flask/blob/master/static/images/screen_home.png](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/profile_screen.png))
+![Profile Screen](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/profile_screen.png)
 
 The system's architecture incorporates background jobs to handle time-consuming tasks, ensuring a smooth user experience. By implementing delayed jobs, the platform avoids performance bottlenecks, enabling users to interact with the platform without delays caused by data fetching and processing.
-![Dashboard Screen]([https://github.com/Alex-RV/Flask/blob/master/static/images/screen_home.png](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/dashboard_screen.png))
+![Dashboard Screen](https://github.com/Alex-RV/GitDevPlanner/blob/main/app/assets/images/screenshots/dashboard_screen.png)
 
 ## Conclusion
 
