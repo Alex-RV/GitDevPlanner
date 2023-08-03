@@ -9,7 +9,7 @@
             <ul class="space-y-2">
               <li><strong>Owner:</strong> <%= repo.owner_login %></li>
               <li><strong>URL:</strong> <%= repo.html_url %></li>
-              <li><strong>Private Status:</strong> <%= repo.private ? 'Private' : 'Public' %></li>
+              <li><strong>Private Status:</strong> <%= repo.private%></li>
               <li>
                 <strong>Last non-code related updates:</strong>
                 <%= repo.updated_repo_at.strftime('%B %e, %Y %l:%M%P') %>
